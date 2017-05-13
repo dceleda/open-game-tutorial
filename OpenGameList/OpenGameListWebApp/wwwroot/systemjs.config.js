@@ -16,6 +16,7 @@
         'core',
         'http',
         'forms',
+        'router',
         'platform-browser',
         'platform-browser-dynamic',
         'upgrade'

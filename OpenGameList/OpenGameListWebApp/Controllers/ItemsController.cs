@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OpenGameListWebApp.ViewModels;
 using Newtonsoft.Json;
+using OpenGameListWebApp.Data;
+using Nelibur.ObjectMapper;
+using OpenGameListWebApp.Data.Items;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,6 +19,12 @@ namespace OpenGameListWebApp.Controllers
         private JsonSerializerSettings _defaultSettings = new JsonSerializerSettings { Formatting = Formatting.Indented };
         private int _defaultNumberOfItems = 5;
         private int _maxNumberOfItems = 100;
+        private ApplicationDbContext _dbContext;
+
+        public ItemsController(ApplicationDbContext ctx)
+        {
+            _dbContext = ctx;
+        }
 
         [HttpGet()]
         public IActionResult Get()
@@ -26,7 +35,9 @@ namespace OpenGameListWebApp.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            return new JsonResult(GetSampleItems().Where(i => i.Id == id).FirstOrDefault(), _defaultSettings);
+            var item = _dbContext.Items.Where(i => i.Id == id).FirstOrDefault();
+
+            return new JsonResult(TinyMapper.Map<ItemViewModel>(item), _defaultSettings);
         }
 
         [HttpGet("GetLatest")]
@@ -41,9 +52,9 @@ namespace OpenGameListWebApp.Controllers
         {
             n = n > _maxNumberOfItems ? _maxNumberOfItems : n;
 
-            var items = GetSampleItems().OrderByDescending(i => i.CreatedDate).Take(n);
+            var items = _dbContext.Items.OrderByDescending(i => i.CreatedDate).Take(n).ToArray();
 
-            return new JsonResult(items, _defaultSettings);
+            return new JsonResult(MapToDataVewItems(items), _defaultSettings);
         }
 
         [HttpGet("GetMostViewed")]
@@ -57,9 +68,9 @@ namespace OpenGameListWebApp.Controllers
         {
             n = n > _maxNumberOfItems ? _maxNumberOfItems : n;
 
-            var items = GetSampleItems().OrderByDescending(i => i.ViewCount).Take(n);
+            var items = _dbContext.Items.OrderByDescending(i => i.ViewCount).Take(n).ToArray();
 
-            return new JsonResult(items, _defaultSettings);
+            return new JsonResult(MapToDataVewItems(items), _defaultSettings);
         }
 
         [HttpGet("GetRandom")]
@@ -73,33 +84,21 @@ namespace OpenGameListWebApp.Controllers
         {
             n = n > _maxNumberOfItems ? _maxNumberOfItems : n;
 
-            var items = GetSampleItems().OrderBy(i => Guid.NewGuid()).Take(n);
+            var items = _dbContext.Items.OrderBy(i => Guid.NewGuid()).Take(n).ToArray();
 
-            return new JsonResult(items, _defaultSettings);
+            return new JsonResult(MapToDataVewItems(items), _defaultSettings);
         }
 
-        private List<ItemViewModel> GetSampleItems(int num = 999)
+        private List<ItemViewModel> MapToDataVewItems(Item[] items)
         {
-            var items = new List<ItemViewModel>(num);
+            var vmItems = new List<ItemViewModel>(items.Count());
 
-            var date = new DateTime(2015, 12, 31).AddDays(-num);
-
-            for (int i = 0; i < num; i++)
+            foreach (var item in items)
             {
-                int id = i + 1;
-
-                items.Add(new ItemViewModel
-                {
-                    Id = id,
-                    Title = $"Item {id} Title",
-                    Description = $"This is a sample description for item {id}: bla bla bla",
-                    CreatedDate = date.AddDays(id),
-                    LastModifiedDate = date.AddDays(id),
-                    ViewCount = num - id
-                });
+                vmItems.Add(TinyMapper.Map<ItemViewModel>(item));
             }
 
-            return items;
+            return vmItems;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit, Input } from "@angular/core";
+import { Router } from "@angular/router";
 import { Item } from "./item";
 import { ItemService } from "./item.service";
 
@@ -12,8 +13,7 @@ import { ItemService } from "./item.service";
                 (click)="onSelect(item)">
                 <span>{{item.Title}}</span>
             </li>
-        </ul>
-        <item-detail *ngIf="selectedItem" [item]="selectedItem"></item-detail>`,
+        </ul>`,
     styles: [`
         ul.items li {cursor: pointer;}
         ul.items li.selected {background-color: #cccccc;}
@@ -28,7 +28,7 @@ export class ItemListComponent implements OnInit {
     items: Item[];
     errrorMessage: string;
 
-    constructor(private itemService: ItemService) { }
+    constructor(private itemService: ItemService, private router: Router) { }
 
     ngOnInit() {
         console.log("ItemListComponent installed with the following type: " + this.class);
@@ -59,6 +59,7 @@ export class ItemListComponent implements OnInit {
 
     onSelect(item: Item) {
         this.selectedItem = item;
-        console.log("item with Id=" + this.selectedItem.Id + " has been selected.");
+        console.log("item with Id=" + this.selectedItem.Id + " has been clicked: loading...");
+        this.router.navigate(["item", this.selectedItem.Id]);
     }
 }

@@ -7,7 +7,7 @@ System.register(["@angular/core"], function (exports_1, context_1) {
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, AppComponent;
+    var core_1, PageNotFoundComponent;
     return {
         setters: [
             function (core_1_1) {
@@ -15,20 +15,20 @@ System.register(["@angular/core"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
-            AppComponent = (function () {
-                function AppComponent() {
-                    this.title = "OpenGameList";
+            PageNotFoundComponent = (function () {
+                function PageNotFoundComponent() {
+                    this.title = "Page not Found";
                 }
-                return AppComponent;
+                return PageNotFoundComponent;
             }());
-            AppComponent = __decorate([
+            PageNotFoundComponent = __decorate([
                 core_1.Component({
-                    selector: "opengamelist",
-                    template: "<h1>{{title}}</h1>\n        <div class=\"menu\">\n            <a class=\"home\" [routerLink]=\"['']\">Home</a>\n            | <a class=\"about\" [routerLink]=\"['about']\">About</a>\n            | <a class=\"login\" [routerLink]=\"['login']\">Login</a>\n        </div>\n        <router-outlet></router-outlet>"
+                    selector: "page-not-found",
+                    template: "\n        <h2>{{title}}</h2>\n        <div>\n            Ooops... this page does not exist.\n        </div>\n    "
                 })
-            ], AppComponent);
-            exports_1("AppComponent", AppComponent);
+            ], PageNotFoundComponent);
+            exports_1("PageNotFoundComponent", PageNotFoundComponent);
         }
     };
 });
-//# sourceMappingURL=app.component.js.map
+//# sourceMappingURL=page-not-found.component.js.map

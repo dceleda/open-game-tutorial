@@ -7,7 +7,7 @@ System.register(["@angular/core"], function (exports_1, context_1) {
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, AppComponent;
+    var core_1, LoginComponent;
     return {
         setters: [
             function (core_1_1) {
@@ -15,20 +15,20 @@ System.register(["@angular/core"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
-            AppComponent = (function () {
-                function AppComponent() {
-                    this.title = "OpenGameList";
+            LoginComponent = (function () {
+                function LoginComponent() {
+                    this.title = "Login";
                 }
-                return AppComponent;
+                return LoginComponent;
             }());
-            AppComponent = __decorate([
+            LoginComponent = __decorate([
                 core_1.Component({
-                    selector: "opengamelist",
-                    template: "<h1>{{title}}</h1>\n        <div class=\"menu\">\n            <a class=\"home\" [routerLink]=\"['']\">Home</a>\n            | <a class=\"about\" [routerLink]=\"['about']\">About</a>\n            | <a class=\"login\" [routerLink]=\"['login']\">Login</a>\n        </div>\n        <router-outlet></router-outlet>"
+                    selector: "login",
+                    template: "\n        <h2>{{title}}</h2>\n        <div>\n            TODO: not implemented\n        </div>\n    "
                 })
-            ], AppComponent);
-            exports_1("AppComponent", AppComponent);
+            ], LoginComponent);
+            exports_1("LoginComponent", LoginComponent);
         }
     };
 });
-//# sourceMappingURL=app.component.js.map
+//# sourceMappingURL=login.component.js.map
