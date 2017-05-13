@@ -11,24 +11,15 @@ export class ItemService {
     private baseUrl = "api/items/";
 
     getLatest(num?: number) {
-        var url = this.baseUrl + "GetLatest/";
-        if (num != null) {
-            url += num;
-        }
-
-        return this.http.get(url).map(resp => resp.json()).catch(this.handleError);
+        return this.getItems("GetLatest/", num);
     }
 
     getMostViewed(num?: number) {
-        var url = this.baseUrl + "GetMostViewed/";
-        if (num != null) { url += num; }
-        return this.http.get(url).map(resp => resp.json()).catch(this.handleError);
+        return this.getItems("GetMostViewed/", num);
     }
 
     getRandom(num?: number) {
-        var url = this.baseUrl + "GetRandom/";
-        if (num != null) { url += num; }
-        return this.http.get(url).map(resp => resp.json()).catch(this.handleError);
+        return this.getItems("GetRandom/", num);
     }
 
     get(id: number) {
@@ -39,6 +30,12 @@ export class ItemService {
         var url = this.baseUrl + id;
 
         return this.http.get(url).map(resp => <Item>resp.json()).catch(this.handleError);
+    }
+
+    private getItems(urlSuffix: string, num?:number) {
+        var url = this.baseUrl + urlSuffix;
+        if (num != null) { url += num; }
+        return this.http.get(url).map(resp => resp.json()).catch(this.handleError);
     }
 
     private handleError(error: Response) {

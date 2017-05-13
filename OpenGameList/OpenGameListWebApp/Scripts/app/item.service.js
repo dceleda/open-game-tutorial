@@ -30,31 +30,26 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function 
                     this.baseUrl = "api/items/";
                 }
                 ItemService.prototype.getLatest = function (num) {
-                    var url = this.baseUrl + "GetLatest/";
-                    if (num != null) {
-                        url += num;
-                    }
-                    return this.http.get(url).map(function (resp) { return resp.json(); }).catch(this.handleError);
+                    return this.getItems("GetLatest/", num);
                 };
                 ItemService.prototype.getMostViewed = function (num) {
-                    var url = this.baseUrl + "GetMostViewed/";
-                    if (num != null) {
-                        url += num;
-                    }
-                    return this.http.get(url).map(function (resp) { return resp.json(); }).catch(this.handleError);
+                    return this.getItems("GetMostViewed/", num);
                 };
                 ItemService.prototype.getRandom = function (num) {
-                    var url = this.baseUrl + "GetRandom/";
-                    if (num != null) {
-                        url += num;
-                    }
-                    return this.http.get(url).map(function (resp) { return resp.json(); }).catch(this.handleError);
+                    return this.getItems("GetRandom/", num);
                 };
                 ItemService.prototype.get = function (id) {
                     if (id == null) {
                         throw new Error("id is required.");
                     }
                     var url = this.baseUrl + id;
+                    return this.http.get(url).map(function (resp) { return resp.json(); }).catch(this.handleError);
+                };
+                ItemService.prototype.getItems = function (urlSuffix, num) {
+                    var url = this.baseUrl + urlSuffix;
+                    if (num != null) {
+                        url += num;
+                    }
                     return this.http.get(url).map(function (resp) { return resp.json(); }).catch(this.handleError);
                 };
                 ItemService.prototype.handleError = function (error) {
