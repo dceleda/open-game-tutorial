@@ -251,3 +251,5 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/ASPdotNET-Core-and-Angular-2-master
+/ASPdotNET-Core-and-Angular-2-master.zip

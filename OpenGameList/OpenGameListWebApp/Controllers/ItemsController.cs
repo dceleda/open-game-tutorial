@@ -37,7 +37,14 @@ namespace OpenGameListWebApp.Controllers
         {
             var item = _dbContext.Items.Where(i => i.Id == id).FirstOrDefault();
 
-            return new JsonResult(TinyMapper.Map<ItemViewModel>(item), _defaultSettings);
+            if (item != null)
+            {
+                return new JsonResult(TinyMapper.Map<ItemViewModel>(item), _defaultSettings);
+            }
+            else
+            {
+                return NotFound(new { Error = $"Item ID {id} has not been found." });
+            }
         }
 
         [HttpGet("GetLatest")]

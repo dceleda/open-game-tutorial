@@ -13,17 +13,19 @@ var gulp = require('gulp'),
 
 var srcPaths = {
     app: ['Scripts/app/main.ts', 'Scripts/app/**/*.ts'],
+    js_rxjs: ['node_modules/rxjs/**'],
     js: ['Scripts/js/**/*.js', 'node_modules/core-js/client/shim.min.js', 'node_modules/zone.js/dist/zone.js',
-        'node_modules/reflect-metadata/Reflect.js', 'node_modules/systemjs/dist/system.src.js', 'node_modules/typescript/lib/typescript.js'],
-    js_angular: ['node_modules/@angular/**'],
-    js_rxjs: ['node_modules/rxjs/**']
+        'node_modules/reflect-metadata/test/Reflect.js', 'node_modules/systemjs/dist/system.src.js', 'node_modules/typescript/lib/typescript.js'],
+    js_angular: ['node_modules/@angular/**']
+    
 };
 
 var destPaths = {
     app: 'wwwroot/app/',
+    js_rxjs: 'wwwroot/js/rxjs/',
     js: 'wwwroot/js/',
-    js_angular: 'wwwroot/js/@angular/',
-    js_rxjs: 'wwwroot/js/rxjs/'
+    js_angular: 'wwwroot/js/@angular/'
+   
 };
 
 gulp.task('app', ['app_clean'], function () {

@@ -1,4 +1,4 @@
-System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function (exports_1, context_1) {
+System.register(["@angular/core", "@angular/http", "rxjs/Rx", "rxjs/add/operator/do", "rxjs/add/operator/catch", "rxjs/add/operator/map", "rxjs/add/observable/throw", "rxjs/add/observable/range"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -10,7 +10,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function 
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, http_1, Observable_1, ItemService;
+    var core_1, http_1, Rx_1, ItemService;
     return {
         setters: [
             function (core_1_1) {
@@ -19,8 +19,18 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function 
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (Observable_1_1) {
-                Observable_1 = Observable_1_1;
+            function (Rx_1_1) {
+                Rx_1 = Rx_1_1;
+            },
+            function (_1) {
+            },
+            function (_2) {
+            },
+            function (_3) {
+            },
+            function (_4) {
+            },
+            function (_5) {
             }
         ],
         execute: function () {
@@ -39,11 +49,12 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function 
                     return this.getItems("GetRandom/", num);
                 };
                 ItemService.prototype.get = function (id) {
+                    var _this = this;
                     if (id == null) {
                         throw new Error("id is required.");
                     }
                     var url = this.baseUrl + id;
-                    return this.http.get(url).map(function (resp) { return resp.json(); }).catch(this.handleError);
+                    return this.http.get(url).map(function (resp) { return resp.json(); }).catch(function (err) { return _this.handleError(err); });
                 };
                 ItemService.prototype.getItems = function (urlSuffix, num) {
                     var url = this.baseUrl + urlSuffix;
@@ -53,8 +64,11 @@ System.register(["@angular/core", "@angular/http", "rxjs/Observable"], function 
                     return this.http.get(url).map(function (resp) { return resp.json(); }).catch(this.handleError);
                 };
                 ItemService.prototype.handleError = function (error) {
-                    console.error(error);
-                    return Observable_1.Observable.throw(error.json().error || "Server error");
+                    //console.error(error);
+                    debugger;
+                    console.error("Test");
+                    var testObs = Rx_1.Observable.range(1, 5);
+                    return Rx_1.Observable.throw("Server error");
                 };
                 return ItemService;
             }());
