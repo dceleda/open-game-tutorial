@@ -1,4 +1,4 @@
-System.register(["@angular/core", "@angular/http", "rxjs/Rx", "rxjs/add/operator/do", "rxjs/add/operator/catch", "rxjs/add/operator/map", "rxjs/add/observable/throw", "rxjs/add/observable/range"], function (exports_1, context_1) {
+System.register(["@angular/core", "@angular/http", "rxjs/Observable", "rxjs/add/operator/do", "rxjs/add/operator/catch", "rxjs/add/operator/map", "rxjs/add/observable/throw", "rxjs/add/observable/range"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -10,7 +10,7 @@ System.register(["@angular/core", "@angular/http", "rxjs/Rx", "rxjs/add/operator
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, http_1, Rx_1, ItemService;
+    var core_1, http_1, Observable_1, ItemService;
     return {
         setters: [
             function (core_1_1) {
@@ -19,8 +19,8 @@ System.register(["@angular/core", "@angular/http", "rxjs/Rx", "rxjs/add/operator
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (Rx_1_1) {
-                Rx_1 = Rx_1_1;
+            function (Observable_1_1) {
+                Observable_1 = Observable_1_1;
             },
             function (_1) {
             },
@@ -56,6 +56,29 @@ System.register(["@angular/core", "@angular/http", "rxjs/Rx", "rxjs/add/operator
                     var url = this.baseUrl + id;
                     return this.http.get(url).map(function (resp) { return resp.json(); }).catch(function (err) { return _this.handleError(err); });
                 };
+                ItemService.prototype.add = function (item) {
+                    var url = this.baseUrl;
+                    return this.http.post(url, JSON.stringify(item), this.getRequestOptions())
+                        .map(function (response) { return response.json(); })
+                        .catch(this.handleError);
+                };
+                ItemService.prototype.update = function (item) {
+                    var url = this.baseUrl + item.Id;
+                    return this.http.put(url, JSON.stringify(item), this.getRequestOptions())
+                        .map(function (resp) { return resp.json(); })
+                        .catch(this.handleError);
+                };
+                ItemService.prototype.delete = function (id) {
+                    var url = this.baseUrl + id;
+                    return this.http.delete(url).catch(this.handleError);
+                };
+                ItemService.prototype.getRequestOptions = function () {
+                    return new http_1.RequestOptions({
+                        headers: new http_1.Headers({
+                            "Content-Type": "application/json"
+                        })
+                    });
+                };
                 ItemService.prototype.getItems = function (urlSuffix, num) {
                     var url = this.baseUrl + urlSuffix;
                     if (num != null) {
@@ -64,11 +87,8 @@ System.register(["@angular/core", "@angular/http", "rxjs/Rx", "rxjs/add/operator
                     return this.http.get(url).map(function (resp) { return resp.json(); }).catch(this.handleError);
                 };
                 ItemService.prototype.handleError = function (error) {
-                    //console.error(error);
-                    debugger;
-                    console.error("Test");
-                    var testObs = Rx_1.Observable.range(1, 5);
-                    return Rx_1.Observable.throw("Server error");
+                    console.error(error);
+                    return Observable_1.Observable.throw(error.json().error || "Server error");
                 };
                 return ItemService;
             }());

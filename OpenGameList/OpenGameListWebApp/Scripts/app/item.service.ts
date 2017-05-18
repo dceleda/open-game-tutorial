@@ -1,6 +1,6 @@
 ﻿import { Injectable } from "@angular/core";
-import { Http, Response } from "@angular/http";
-import { Observable } from "rxjs/Rx";
+import { Http, Response, Headers, RequestOptions } from "@angular/http";
+import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -38,6 +38,36 @@ export class ItemService {
         return this.http.get(url).map(resp => <Item>resp.json()).catch(err => { return this.handleError(err) });
     }
 
+    add(item: Item) {
+        var url = this.baseUrl;
+
+        return this.http.post(url, JSON.stringify(item), this.getRequestOptions())
+            .map(response => response.json())
+            .catch(this.handleError);
+    }
+
+    update(item: Item) {
+        var url = this.baseUrl + item.Id;
+
+        return this.http.put(url, JSON.stringify(item), this.getRequestOptions())
+            .map(resp => resp.json())
+            .catch(this.handleError);
+    }
+
+    delete(id: number) {
+        var url = this.baseUrl + id;
+
+        return this.http.delete(url).catch(this.handleError);
+    }
+
+    private getRequestOptions() {
+        return new RequestOptions({
+            headers: new Headers({
+                "Content-Type": "application/json"
+            })
+        });
+    }
+
     private getItems(urlSuffix: string, num?:number) {
         var url = this.baseUrl + urlSuffix;
         if (num != null) { url += num; }
@@ -45,11 +75,7 @@ export class ItemService {
     }
 
     private handleError(error: Response) {
-        //console.error(error);
-        debugger;
-        console.error("Test");
-
-        var testObs = Observable.range(1, 5);
-        return Observable.throw("Server error");
+        console.error(error);
+        return Observable.throw(error.json().error || "Server error");
     }
 }

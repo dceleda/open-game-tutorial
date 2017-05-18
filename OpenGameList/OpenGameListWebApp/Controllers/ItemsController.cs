@@ -16,7 +16,7 @@ namespace OpenGameListWebApp.Controllers
     [Route("api/[controller]")]
     public class ItemsController : Controller
     {
-        private JsonSerializerSettings _defaultSettings = new JsonSerializerSettings { Formatting = Formatting.Indented };
+        private JsonSerializerSettings _defaultJsonSettings = new JsonSerializerSettings { Formatting = Formatting.Indented };
         private int _defaultNumberOfItems = 5;
         private int _maxNumberOfItems = 100;
         private ApplicationDbContext _dbContext;
@@ -25,6 +25,8 @@ namespace OpenGameListWebApp.Controllers
         {
             _dbContext = ctx;
         }
+
+        #region GET
 
         [HttpGet()]
         public IActionResult Get()
@@ -39,7 +41,7 @@ namespace OpenGameListWebApp.Controllers
 
             if (item != null)
             {
-                return new JsonResult(TinyMapper.Map<ItemViewModel>(item), _defaultSettings);
+                return new JsonResult(TinyMapper.Map<ItemViewModel>(item), _defaultJsonSettings);
             }
             else
             {
@@ -61,7 +63,7 @@ namespace OpenGameListWebApp.Controllers
 
             var items = _dbContext.Items.OrderByDescending(i => i.CreatedDate).Take(n).ToArray();
 
-            return new JsonResult(MapToDataVewItems(items), _defaultSettings);
+            return new JsonResult(MapToDataVewItems(items), _defaultJsonSettings);
         }
 
         [HttpGet("GetMostViewed")]
@@ -77,7 +79,7 @@ namespace OpenGameListWebApp.Controllers
 
             var items = _dbContext.Items.OrderByDescending(i => i.ViewCount).Take(n).ToArray();
 
-            return new JsonResult(MapToDataVewItems(items), _defaultSettings);
+            return new JsonResult(MapToDataVewItems(items), _defaultJsonSettings);
         }
 
         [HttpGet("GetRandom")]
@@ -93,7 +95,72 @@ namespace OpenGameListWebApp.Controllers
 
             var items = _dbContext.Items.OrderBy(i => Guid.NewGuid()).Take(n).ToArray();
 
-            return new JsonResult(MapToDataVewItems(items), _defaultSettings);
+            return new JsonResult(MapToDataVewItems(items), _defaultJsonSettings);
+        }
+
+        #endregion
+
+        [HttpPost()]
+        public IActionResult Add([FromBody]ItemViewModel vm)
+        {
+            if(vm != null)
+            {
+                var item = TinyMapper.Map<Item>(vm);
+                item.CreatedDate = item.LastModifiedDate = DateTime.Now;
+
+                //TODO: 
+                item.UserId = _dbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+
+                _dbContext.Items.Add(item);
+                _dbContext.SaveChanges();
+
+                return new JsonResult(TinyMapper.Map<ItemViewModel>(item), _defaultJsonSettings);
+            }
+
+            return new StatusCodeResult(500);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody]ItemViewModel vm)
+        {
+            if (vm != null)
+            {
+                var item = _dbContext.Items.Where(i => i.Id == id).FirstOrDefault();
+                if(item != null)
+                {
+                    item.UserId = vm.UserId;
+                    item.Description = vm.Description;
+                    item.Flags = vm.Flags;
+                    item.Notes = vm.Notes;
+                    item.Text = vm.Text;
+                    item.Title = vm.Title;
+                    item.Type = vm.Type;
+
+                    item.LastModifiedDate = DateTime.Now;
+
+                    _dbContext.SaveChanges();
+
+                    return new JsonResult(TinyMapper.Map<ItemViewModel>(item), _defaultJsonSettings);
+                }
+            }
+
+            return NotFound(new { Error = $"Item ID {id} has not been found" });
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var item = _dbContext.Items.Where(i => i.Id == id).FirstOrDefault();
+
+            if(item != null)
+            {
+                _dbContext.Items.Remove(item);
+                _dbContext.SaveChanges();
+
+                return new OkResult();
+            }
+
+            return NotFound(new { Error = $"Item ID {id} has not been found" });
         }
 
         private List<ItemViewModel> MapToDataVewItems(Item[] items)

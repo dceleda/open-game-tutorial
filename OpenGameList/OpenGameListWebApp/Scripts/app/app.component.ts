@@ -7,10 +7,14 @@
             <a class="home" [routerLink]="['']">Home</a>
             | <a class="about" [routerLink]="['about']">About</a>
             | <a class="login" [routerLink]="['login']">Login</a>
+            | <a class="add" [routerLink]="['item', 0]">Add New</a>
         </div>
         <router-outlet></router-outlet>`
 })
 
 export class AppComponent {
     title = "OpenGameList";
+
+    //this.router.navigateByUrl('/dummy', { skipLocationChange: true });
+    //setTimeout(() => this.router.navigate(['item', 0]));
 }

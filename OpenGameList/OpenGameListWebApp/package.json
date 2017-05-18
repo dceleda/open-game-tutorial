@@ -14,7 +14,7 @@
     "core-js": "^2.4.1",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.1.0",
-    "systemjs": "^0.20.12",
+    "systemjs": "0.19.27",
     "typings": "^2.1.1",
     "zone.js": "^0.8.4"
   },
